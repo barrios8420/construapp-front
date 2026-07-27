@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CapturaSelfie from "@/components/ui/CapturaSelfie";
 
 export default function RegistroTrabajadorPage() {
   const [celular, setCelular] = useState("");
   const [cedula, setCedula] = useState("");
   const [errores, setErrores] = useState<{ celular?: string; cedula?: string }>({});
   const [enviando, setEnviando] = useState(false);
+  const [selfie, setSelfie] = useState<File | null>(null);
 
   function validarCelular(valor: string) {
     return /^[0-9]{10}$/.test(valor);
@@ -86,9 +88,12 @@ export default function RegistroTrabajadorPage() {
               )}
             </div>
 
-            <div className="rounded-md border border-dashed border-neutral-300 p-4 text-center text-sm text-muted-foreground">
-              📸 La captura de selfie se conecta en el siguiente paso (S1-FE-04)
-            </div>
+            <CapturaSelfie
+              onCapture={({ file }) => {
+                setSelfie(file);
+                console.log("Selfie lista para enviar:", file.name, file.size, "bytes");
+              }}
+            />
 
             <Button type="submit" className="w-full" disabled={enviando}>
               {enviando ? "Enviando código..." : "Continuar y recibir código OTP"}
