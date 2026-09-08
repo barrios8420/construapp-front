@@ -17,18 +17,18 @@ const OTP_DE_PRUEBA = "123456";
 export default function RegistroTrabajadorPage() {
   const router = useRouter();
 
-  const [celular, setCelular] = useState("");
+  const [correo, setCorreo] = useState("");
   const [cedula, setCedula] = useState("");
   const [selfie, setSelfie] = useState<File | null>(null);
   const [codigoOtp, setCodigoOtp] = useState("");
 
   const [paso, setPaso] = useState<"datos" | "otp">("datos");
-  const [errores, setErrores] = useState<{ celular?: string; cedula?: string; selfie?: string; otp?: string }>({});
+  const [errores, setErrores] = useState<{ correo?: string; cedula?: string; selfie?: string; otp?: string }>({});
   const [enviando, setEnviando] = useState(false);
   const [mensajeInfo, setMensajeInfo] = useState("");
 
-  function validarCelular(valor: string) {
-    return /^[0-9]{10}$/.test(valor);
+  function validarCorreo(valor: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
   }
 
   function validarCedula(valor: string) {
@@ -40,8 +40,8 @@ export default function RegistroTrabajadorPage() {
 
     const nuevosErrores: typeof errores = {};
 
-    if (!validarCelular(celular)) {
-      nuevosErrores.celular = "El celular debe tener exactamente 10 dígitos";
+    if (!validarCorreo(correo)) {
+      nuevosErrores.correo = "Ingresa un correo válido";
     }
     if (!validarCedula(cedula)) {
       nuevosErrores.cedula = "Ingresa una cédula válida";
@@ -65,7 +65,7 @@ export default function RegistroTrabajadorPage() {
     }
 
     const { error } = await supabase.auth.signInWithOtp({
-      phone: `+57${celular}`,
+      email: correo,
     });
 
     setEnviando(false);
@@ -76,7 +76,7 @@ export default function RegistroTrabajadorPage() {
     }
 
     setPaso("otp");
-    setMensajeInfo(`Te enviamos un código al +57 ${celular}`);
+    setMensajeInfo(`Te enviamos un código a ${correo}`);
   }
 
   async function verificarOtp(e: React.FormEvent) {
@@ -104,9 +104,9 @@ export default function RegistroTrabajadorPage() {
     }
 
     const { error } = await supabase.auth.verifyOtp({
-      phone: `+57${celular}`,
+      email: correo,
       token: codigoOtp,
-      type: "sms",
+      type: "email",
     });
 
     setEnviando(false);
@@ -127,29 +127,27 @@ export default function RegistroTrabajadorPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">
-            {paso === "datos" ? "Regístrate como trabajador" : "Verifica tu celular"}
+            {paso === "datos" ? "Regístrate como trabajador" : "Verifica tu correo"}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             {paso === "datos"
-              ? "Con tu celular y cédula empezamos a construir tu perfil verificado."
-              : mensajeInfo || `Ingresa el código enviado a tu celular.`}
+              ? "Con tu correo y cédula empezamos a construir tu perfil verificado."
+              : mensajeInfo || `Ingresa el código enviado a tu correo.`}
           </p>
         </CardHeader>
         <CardContent>
           {paso === "datos" && (
             <form onSubmit={enviarOtp} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="celular">Número de celular</Label>
+                <Label htmlFor="correo">Correo electrónico</Label>
                 <Input
-                  id="celular"
-                  type="tel"
-                  inputMode="numeric"
-                  placeholder="3001234567"
-                  value={celular}
-                  onChange={(e) => setCelular(e.target.value.replace(/\D/g, ""))}
-                  maxLength={10}
+                  id="correo"
+                  type="email"
+                  placeholder="tucorreo@gmail.com"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
                 />
-                {errores.celular && <p className="text-sm text-red-600">{errores.celular}</p>}
+                {errores.correo && <p className="text-sm text-red-600">{errores.correo}</p>}
               </div>
 
               <div className="space-y-2">
