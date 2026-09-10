@@ -10,7 +10,7 @@ import { supabase } from "@/lib/supabase";
 
 // 🔧 MODO PRUEBA: simula el envío/verificación de OTP sin necesitar las keys reales de Supabase.
 // Cuando Joy te pase las keys, cámbialo a `false` y todo se conecta al backend real.
-const MODO_PRUEBA = true;
+const MODO_PRUEBA = false;
 const OTP_DE_PRUEBA = "123456";
 
 export default function RegistroContratistaPage() {
