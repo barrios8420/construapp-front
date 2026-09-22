@@ -8,19 +8,42 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CapturaSelfie from "@/components/ui/CapturaSelfie";
 import { supabase } from "@/lib/supabase";
+import { OFICIOS } from "@/components/ui/FiltrosBusqueda";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const OFICIOS_SELECCIONABLES = OFICIOS.filter((o) => o !== "Todos los oficios");
 
 export default function CompletarPerfilTrabajadorPage() {
   const router = useRouter();
 
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [cedula, setCedula] = useState("");
+  const [celular, setCelular] = useState("");
+  const [oficio, setOficio] = useState("");
   const [selfie, setSelfie] = useState<File | null>(null);
-  const [errores, setErrores] = useState<{ nombre?: string; cedula?: string; selfie?: string }>({});
+
+  const [errores, setErrores] = useState<{
+    nombre?: string;
+    cedula?: string;
+    celular?: string;
+    oficio?: string;
+    selfie?: string;
+  }>({});
   const [enviando, setEnviando] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
 
   function validarCedula(valor: string) {
     return /^[0-9]{6,10}$/.test(valor);
+  }
+
+  function validarCelular(valor: string) {
+    return /^[0-9]{10}$/.test(valor);
   }
 
   async function guardarPerfil(e: React.FormEvent) {
@@ -33,6 +56,12 @@ export default function CompletarPerfilTrabajadorPage() {
     }
     if (!validarCedula(cedula)) {
       nuevosErrores.cedula = "Ingresa una cédula válida";
+    }
+    if (!validarCelular(celular)) {
+      nuevosErrores.celular = "El celular debe tener exactamente 10 dígitos";
+    }
+    if (!oficio) {
+      nuevosErrores.oficio = "Selecciona tu oficio principal";
     }
     if (!selfie) {
       nuevosErrores.selfie = "Necesitamos tu selfie de verificación";
@@ -54,11 +83,14 @@ export default function CompletarPerfilTrabajadorPage() {
 
     const { error: updateError } = await supabase
       .from("trabajadores")
-      .update({
+      .upsert({
+        id: userData.user.id,
+        email: userData.user.email,
         nombre_completo: nombreCompleto,
-        cedula_plana: cedula,
-      })
-      .eq("id", userData.user.id);
+        cedula_hash: cedula,
+        celular: celular,
+        oficio_principal: oficio,
+      });
 
     setEnviando(false);
 
@@ -67,13 +99,13 @@ export default function CompletarPerfilTrabajadorPage() {
       return;
     }
 
-    // TODO: subir la selfie al bucket de Supabase Storage (S2-FE-01)
+    // TODO: subir la selfie al bucket de Supabase Storage (pendiente definir con Joy)
 
     router.push("/portafolio");
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-neutral-50 px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Completa tu perfil</CardTitle>
@@ -106,6 +138,37 @@ export default function CompletarPerfilTrabajadorPage() {
                 onChange={(e) => setCedula(e.target.value.replace(/\D/g, ""))}
               />
               {errores.cedula && <p className="text-sm text-red-600">{errores.cedula}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="celular">Número de celular</Label>
+              <Input
+                id="celular"
+                type="tel"
+                inputMode="numeric"
+                placeholder="3001234567"
+                value={celular}
+                onChange={(e) => setCelular(e.target.value.replace(/\D/g, ""))}
+                maxLength={10}
+              />
+              {errores.celular && <p className="text-sm text-red-600">{errores.celular}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="oficio">Oficio principal</Label>
+              <Select value={oficio} onValueChange={(v) => v && setOficio(v)}>
+                <SelectTrigger id="oficio" className="w-full">
+                  <SelectValue placeholder="Selecciona tu oficio" />
+                </SelectTrigger>
+                <SelectContent>
+                  {OFICIOS_SELECCIONABLES.map((o) => (
+                    <SelectItem key={o} value={o}>
+                      {o}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errores.oficio && <p className="text-sm text-red-600">{errores.oficio}</p>}
             </div>
 
             <CapturaSelfie
