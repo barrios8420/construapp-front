@@ -3,9 +3,9 @@ import { Wrench, MapPin, Briefcase } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-500 to-green-600 flex flex-col justify-between">
       {/* Header institucional */}
-      <header className="border-b border-neutral-200 bg-white px-6 py-4 flex justify-between items-center shadow-xs">
+      <header className="border-b border-white/20 bg-white/80 backdrop-blur-sm px-6 py-4 flex justify-between items-center shadow-xs">
         <div className="flex items-center gap-3">
           <span className="font-bold text-xl text-neutral-900 tracking-tight">ConstruApp</span>
           <span className="text-xs bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-medium">
@@ -22,13 +22,13 @@ export default function Home() {
 
       {/* Sección Principal / Hero */}
       <main className="max-w-4xl mx-auto px-6 py-16 flex-1 flex flex-col justify-center items-center text-center">
-        <div className="inline-block mb-4 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold tracking-wide uppercase">
+        <div className="inline-block mb-4 px-3 py-1 bg-white/90 text-blue-700 rounded-full text-xs font-semibold tracking-wide uppercase shadow-sm">
           Plataforma de Ingeniería y Obras
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-neutral-900 tracking-tight mb-4 leading-tight">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight drop-shadow-md">
           Conectando talento y proyectos de construcción con precisión
         </h1>
-        <p className="text-lg text-neutral-600 max-w-2xl mb-10">
+        <p className="text-lg text-white/90 max-w-2xl mb-10 drop-shadow-sm">
           Una solución tecnológica moderna orientada a optimizar la búsqueda de profesionales calificados, geolocalización de obras y gestión eficiente de portafolios en terreno.
         </p>
 
@@ -36,7 +36,7 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full text-left">
           <Link
             href="/preview-tarjetas"
-            className="p-5 bg-white rounded-xl border border-neutral-200 shadow-xs hover:border-neutral-400 transition group"
+            className="p-5 bg-white rounded-xl border border-neutral-200 shadow-lg hover:border-neutral-400 hover:scale-[1.02] transition group"
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2.5 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-100 transition">
@@ -49,7 +49,7 @@ export default function Home() {
 
           <Link
             href="/mapa"
-            className="p-5 bg-white rounded-xl border border-neutral-200 shadow-xs hover:border-neutral-400 transition group"
+            className="p-5 bg-white rounded-xl border border-neutral-200 shadow-lg hover:border-neutral-400 hover:scale-[1.02] transition group"
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2.5 rounded-lg bg-green-50 text-green-600 group-hover:bg-green-100 transition">
@@ -62,7 +62,7 @@ export default function Home() {
 
           <Link
             href="/portafolio"
-            className="p-5 bg-white rounded-xl border border-neutral-200 shadow-xs hover:border-neutral-400 transition group"
+            className="p-5 bg-white rounded-xl border border-neutral-200 shadow-lg hover:border-neutral-400 hover:scale-[1.02] transition group"
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="p-2.5 rounded-lg bg-amber-50 text-amber-600 group-hover:bg-amber-100 transition">
@@ -76,7 +76,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-200 bg-white py-6 text-center text-xs text-neutral-500">
+      <footer className="border-t border-white/20 bg-white/80 backdrop-blur-sm py-6 text-center text-xs text-neutral-600">
         ConstruApp • Desarrollado con Next.js, React, TypeScript, Tailwind CSS y Supabase.
       </footer>
     </div>
